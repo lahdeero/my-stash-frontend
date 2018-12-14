@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Button } from 'react-bootstrap'
+import { Button } from 'react-materialize'
 import { Redirect, Link } from 'react-router-dom'
 
 import noteService from '../services/Notes.js'

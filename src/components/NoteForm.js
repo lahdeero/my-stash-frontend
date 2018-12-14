@@ -1,8 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { Button} from 'react-bootstrap'
+import { Input,Button } from 'react-materialize'
 import { Redirect } from 'react-router-dom'
-import { Input } from 'react-materialize'
 
 import { createNote } from '../reducers/noteReducer'
 import { notify, errormessage } from '../reducers/notificationReducer'

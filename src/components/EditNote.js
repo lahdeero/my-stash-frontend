@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { Button } from 'react-materialize'
 import { Redirect } from 'react-router-dom'
 import { Input } from 'react-materialize'
 
@@ -109,30 +109,15 @@ class ShowNote extends React.Component {
 			return <div><Redirect to={redirecturl} /></div>
 		}
 
-		const tooltip = (
-			<Tooltip id="tooltip">
-				<strong>You have to EDIT NOTE(bottom of page) to save changes!</strong>
-			</Tooltip>
-		)
-		const tagTooltip = (
-			<Tooltip id="tooltip">
-				<strong>Click to remove tag</strong>
-			</Tooltip>
-		)
-
 		return(
     	<div>
 				<div>
-					<h3>Note tags&nbsp;
-					<OverlayTrigger placement="top" overlay={tooltip}>
+					<h3>Note tags&nbsp;</h3>
 						<Button bsStyle="info">[?]</Button>
-					</OverlayTrigger></h3>
 				</div>
 				<div>
 					{this.state.tags.map(tag =>
-						<OverlayTrigger key={tag} placement="top" overlay={tagTooltip}>
 							<Button key={tag} onClick={() => { this.removeTag(tag) }}> {tag} </Button>
-						</OverlayTrigger>
 					)}
 				</div>
 				<div>
