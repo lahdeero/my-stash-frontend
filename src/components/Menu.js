@@ -24,7 +24,7 @@ class Menu extends React.Component {
 				</IndexLinkContainer>
 			</Navbar>
 			<Filter />
-		</div>
+			</div>
 		)
 	}
 } 

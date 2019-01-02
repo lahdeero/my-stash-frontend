@@ -1,15 +1,17 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Pagination } from 'react-materialize'
+import PropTypes from 'prop-types'
 
 import Note from './Note'
 
-class NoteList extends React.Component {
+class List extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
 			page: 1,
-			notesPerPage: 10
+			notesPerPage: 10,
+			filter: ''
 		}
 	}
 
@@ -19,6 +21,13 @@ class NoteList extends React.Component {
 		}
 		return this.setState({  })
 	}
+	clearFilter = () => {
+		return () => {
+			const filter = this.props.filter
+			this.props.actionForFilter('')
+			console.log('filter should empty = ' + filter)
+		}
+	}
 
 	render() {
 		let key = 1
@@ -26,9 +35,16 @@ class NoteList extends React.Component {
 		const start = (this.state.page-1)*this.state.notesPerPage
 		const end = start+this.state.notesPerPage
 
+		// const allNotes = this.props.noteInitialization
 		let notesToShow = this.props.notes.slice(start, end)
-		if (filter) {
-			notesToShow = this.props.notes.filter(note => note.otsikko.toLowerCase().includes(filter.toLowerCase())).slice(0,10)
+		console.log('Filter error ' + filter)
+		if (filter && (filter !== undefined || null || '')) {
+			try {
+				notesToShow = this.props.notes.filter(note => note.otsikko.toLowerCase().includes(filter.toLowerCase())).slice(0,10)
+			} catch (e) {
+				// Happens everytime after there is filter when deleting note
+				console.log(e)
+			}
 		}
 		return (
 			<div className="container">
@@ -38,7 +54,7 @@ class NoteList extends React.Component {
 					<ul>
 						{notesToShow.map(note => <li key={key++}>
 						<div>
-							<Note note={note} Link={this.props.Link} Key={key}/>
+							<Note note={note} Link={this.props.Link} Key={key} />
 							</div></li>
 						)}
 					</ul>
@@ -57,9 +73,8 @@ const mapStateToProps = (store) => {
 	}
 }
 
-
 const ConnectedNoteList = connect(
 	mapStateToProps
-)(NoteList)
+)(List)
 
 export default ConnectedNoteList

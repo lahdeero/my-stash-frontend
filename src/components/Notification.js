@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Alert } from 'react-materialize'
+// import { Alert } from 'react-materialize'
 
 class Notification extends React.Component {
   static propTypes = {

@@ -5,13 +5,13 @@ import PropTypes from 'prop-types'
 
 import './App.css'
 import Menu from './components/Menu'
-import NoteList from './components/NoteList'
-import ShowNote from './components/ShowNote'
-import EditNote from './components/EditNote'
-import NoteForm from './components/NoteForm'
+import NoteList from './components/note/List'
+import ShowNote from './components/note/Show'
+import EditNote from './components/note/Edit'
+import NoteForm from './components/note/Form'
 import About from './components/About'
 import Notification from './components/Notification'
-import {noteInitialization} from './reducers/noteReducer'
+import {noteInitialization} from './reducers/note'
 
 class App extends Component {
 	static propTypes = {
@@ -57,23 +57,25 @@ class App extends Component {
   render() {
    return (
       <div>
-				<Notification />
+		<Notification />
         <Router>
-          <div>
-						<Menu currentPage={this.state.navigation} handleSelect={this.handleSelect} />
+        <div>
+			<Menu currentPage={this.state.navigation} handleSelect={this.handleSelect} />
             <Route exact path="/" render={() => <NoteList Link={Link} Route={Route}/>} />
-		 				<Route path="/create" render={() => <NoteForm />} />
-		 				<Route path="/about" render={() => <About />} />
-		 				<br />
-			 			<Route exact path="/notes/:id" render={({match}) => 
-								<ShowNote noteId={match.params.id} Redirect={Redirect} />
-			 			}/>
-		 				<Route exact path="/notes/edit/:id" render={({match}) => 
-								<EditNote noteId={match.params.id} Redirect={Redirect} />
-			 			}/>
-		 		</div>
-		 	</Router>
-		 </div>
+				<Route path="/create" render={() => <NoteForm />} />
+				<Route path="/about" render={() => <About />} />
+				<br />
+				{/* <Route exact path="/notes/:id" component={ShowNote} />  */}
+				{/* TODO: Error when unknown id */ }
+				<Route exact path="/notes/:id" component={({match}) => 
+				<ShowNote noteId={match.params.id} Redirect={Redirect} />
+				}/>
+				<Route exact path="/notes/edit/:id" component={({match}) => 
+				<EditNote noteId={match.params.id} Redirect={Redirect} />
+				}/>
+		</div>
+		</Router>
+	  </div>
     )
   }
 }
