@@ -1,9 +1,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from './App'
+import { createStore,  applyMiddleware } from 'redux'
+import thunk from 'redux-thunk'
 import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
-import store from './store'
+import App from './App'
+import rootReducer from './reducers'
+
+const store = createStore(rootReducer, applyMiddleware(thunk))
+// const store = createStore(rootReducer)
 
 ReactDOM.render(
 	<BrowserRouter>

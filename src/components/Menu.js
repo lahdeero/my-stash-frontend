@@ -15,7 +15,7 @@ class Menu extends React.Component {
 	render() {
 		return(
 			<div>
-			<Navbar className="indigo" brand='mystash' right>
+			<Navbar className="indigo" brand='my-stash' right>
 				<IndexLinkContainer to='/create'>
 					<NavItem eventkey={2}><Icon>note_add</Icon></NavItem>
 				</IndexLinkContainer>
@@ -23,7 +23,7 @@ class Menu extends React.Component {
 						<NavItem eventkey={3}><Icon>settings</Icon></NavItem> 
 				</IndexLinkContainer>
 			</Navbar>
-			<Filter />
+			<Filter handleChange={this.props.handleChange} />
 			</div>
 		)
 	}

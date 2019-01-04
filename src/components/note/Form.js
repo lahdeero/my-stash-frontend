@@ -65,7 +65,6 @@ class Form extends React.Component {
 		event.preventDefault()
 		// If user didnt hit "Add tag" but there's text in "add tag field"
 		if ((this.state.tags === undefined || this.state.tags.length === 0) && this.state.tagText.length > 0) {
-			console.log('menee')
 			const newTags = await [this.state.tagText]
 			await this.setState({
 				tags: newTags
@@ -73,12 +72,12 @@ class Form extends React.Component {
 		}
 		try {
 			const noteObject = await {
-				otsikko: this.state.title,
-				sisalto: this.state.content,
-				tagit: this.state.tags
+				title: this.state.title,
+				content: this.state.content,
+				tags: this.state.tags
 			}
 			const id = await this.props.createNote(noteObject)
-			await this.props.notify(`you created '${noteObject.otsikko}'`, 10)
+			await this.props.notify(`you created '${noteObject.title}'`, 10)
 			this.setState({
 				title: '',
 				content: '',

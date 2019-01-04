@@ -19,32 +19,34 @@ class Show extends React.Component {
 		}
 	}
 
-	async componentWillMount() {
+	async componentDidMount() {
 		try {
-			const oneNoteArr = await noteService.getOne(this.props.noteId)
+			const oneNoteArr = await noteService.getOne(this.props.match.params.id)
 			await this.setState({
 				id: oneNoteArr[0].id,
-				title: oneNoteArr[0].otsikko,
-				content: oneNoteArr[0].sisalto,
-				tags: oneNoteArr[0].tagit
+				title: oneNoteArr[0].title,
+				content: oneNoteArr[0].content,
+				tags: oneNoteArr[0].tags
 			})
 		} catch (eception) {
-			  this.props.errormessage(`Couldn't find note '${this.props.noteId}'`, 5)
+			  this.props.errormessage(`Couldn't find note '${this.props.match.params.id}'`, 5)
 				this.setState({
 					redirect: true
 				})
 		}
 	}
 
+
 	deleteNote = async (event) => {
 		event.preventDefault()
-		const returned_id = await this.state.id
-		const del_title = await this.state.title
 		if (!window.confirm(`Are you sure you want to delete '${this.state.title}' ?`)) return
 		else {
-			await this.props.removeNote(returned_id)
-			await this.props.notify(`you deleted '${del_title}'`, 10)
-			await this.setState({ redirect: true })
+			const del_id = await this.props.removeNote(this.state.id)
+			console.log("DEL ID = " + del_id)
+			if (typeof(del_id) === "number") {
+				await this.props.notify(`you deleted '${this.state.title}'`, 10)
+				await this.setState({ redirect: true })
+			}
 		}
 	}
 

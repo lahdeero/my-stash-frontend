@@ -7,18 +7,17 @@ const noteReducer = (store = [], action) => {
 				...store,
 				{
 					id: action.data.id,
-					title: action.data.otsikko,
-					sisalto: action.data.sisalto,
-					tagit: action.data.tagit 
+					title: action.data.title,
+					content: action.data.content,
+					tags: action.data.tags 
 				}
 			]
 		case 'MODIFY':
 			return store.map(note => (note.id === action.data[0].id) ? action.data[0] : note)
 		case 'REMOVE':
-			return [...store.filter(note => note.id !== action.data), action.data]
+			return store.filter(note => note.id !== action.data)
 		case 'INIT_NOTES':
 			return action.data
-			// return store.concat(action.data)
 		default:
 			return store
 	}
@@ -37,15 +36,8 @@ export const noteInitialization = () => {
 export const createNote = (noteObject) => {
 	return async (dispatch) => {
 		const saved_noteObject = await noteService.create(noteObject)
-		// console.log(saved_noteObject[0])
 		dispatch({
 			type: 'CREATE',
-			// data: {
-			// 	id: saved_noteObject.id,
-			// 	title: saved_noteObject.otsikko,
-			// 	content: saved_noteObject.sisalto,
-			// 	tags: saved_noteObject.tagit
-			// }
 			data: saved_noteObject[0]
 		})
 		return saved_noteObject[0].id
@@ -65,11 +57,12 @@ export const modifyNote = (noteObject) => {
 
 export const removeNote = (id) => {
 	return async (dispatch) => {
-		await noteService.erase(id)
+		const del_id = await noteService.erase(id)
 		dispatch({
 			type: 'REMOVE',
 			data: id
 		})
+		return del_id
 	}
 }
 

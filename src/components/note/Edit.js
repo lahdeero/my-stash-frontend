@@ -23,16 +23,16 @@ class Edit extends React.Component {
 	}
 
 	async componentWillMount() {
-		const oneNoteArr = await noteService.getOne(this.props.noteId)
+		const oneNoteArr = await noteService.getOne(this.props.match.params.id)
 		try {
 			await this.setState({
 				id: oneNoteArr[0].id,
-				title: oneNoteArr[0].otsikko,
-				content: oneNoteArr[0].sisalto,
-				tags: oneNoteArr[0].tagit.filter(tag => tag !== null)
+				title: oneNoteArr[0].title,
+				content: oneNoteArr[0].content,
+				tags: oneNoteArr[0].tags.filter(tag => tag !== null)
 			})
 		} catch (eception) {
-			  this.props.errormessage(`Couldn't find note '${this.props.noteId}'`, 5)
+			  this.props.errormessage(`Couldn't find note '${this.props.match.params.id}'`, 5)
 				this.setState({
 					redirect: true
 				})
@@ -50,12 +50,12 @@ class Edit extends React.Component {
 		try {
 			const noteObject = await {
 				id: this.state.id,
-				otsikko: this.state.title,
-				sisalto: this.state.content,
-				tagit: this.state.tags
+				title: this.state.title,
+				content: this.state.content,
+				tags: this.state.tags
 			}
 			await this.props.modifyNote(noteObject)
-			await this.props.notify(`you modified '${noteObject.otsikko}'`, 10)
+			await this.props.notify(`you modified '${noteObject.title}'`, 10)
 			//cant set id to empty 'cos of redirect
 			this.setState({
 				title: '',

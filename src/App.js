@@ -1,20 +1,22 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link, Redirect } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
 import './App.css'
 import Menu from './components/Menu'
-import NoteList from './components/note/List'
-import ShowNote from './components/note/Show'
-import EditNote from './components/note/Edit'
-import NoteForm from './components/note/Form'
+import List from './components/note/List'
+import Show from './components/note/Show'
+import Edit from './components/note/Edit'
+import Form from './components/note/Form'
 import About from './components/About'
 import Notification from './components/Notification'
 import {noteInitialization} from './reducers/note'
+import { actionForFilter } from './reducers/filter'
 
 class App extends Component {
 	static propTypes = {
+    	actionForFilter: PropTypes.func.isRequired,
 		noteInitialization: PropTypes.func.isRequired
 	}
 	constructor() {
@@ -31,7 +33,7 @@ class App extends Component {
 			this.setState({ 
 				isMounted: true 
 			})
-			document.title = 'mystash'
+			document.title = 'my-stash'
 		}
   }
 
@@ -39,6 +41,11 @@ class App extends Component {
 		this.setState({
 			isMounted: false
 		})
+	}
+	handleChange = (event) => {
+    	event.preventDefault()
+    	const filter = event.target.value
+    	this.props.actionForFilter(filter)
 	}
 
 	handleSelect = (selectedKey) => () => {
@@ -60,19 +67,12 @@ class App extends Component {
 		<Notification />
         <Router>
         <div>
-			<Menu currentPage={this.state.navigation} handleSelect={this.handleSelect} />
-            <Route exact path="/" render={() => <NoteList Link={Link} Route={Route}/>} />
-				<Route path="/create" render={() => <NoteForm />} />
+			<Menu currentPage={this.state.navigation} handleSelect={this.handleSelect} handleChange={this.handleChange} />
+            <Route exact path="/" render={() => <List Link={Link} Route={Route}/>} />
+				<Route path="/create" render={() => <Form />} />
 				<Route path="/about" render={() => <About />} />
-				<br />
-				{/* <Route exact path="/notes/:id" component={ShowNote} />  */}
-				{/* TODO: Error when unknown id */ }
-				<Route exact path="/notes/:id" component={({match}) => 
-				<ShowNote noteId={match.params.id} Redirect={Redirect} />
-				}/>
-				<Route exact path="/notes/edit/:id" component={({match}) => 
-				<EditNote noteId={match.params.id} Redirect={Redirect} />
-				}/>
+				<Route exact path="/notes/:id" component={Show} />
+				<Route exact path="/notes/edit/:id" component={Edit} />
 		</div>
 		</Router>
 	  </div>
@@ -81,6 +81,17 @@ class App extends Component {
 }
 
 
-export default connect( 
-	null, {noteInitialization}
+const mapStateToProps = (store) => {
+	return {
+		notes: store.notes,
+		filter: store.filter
+	}
+}
+const mapDispatchToProps = {
+	noteInitialization,
+	actionForFilter
+}
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
 )(App)

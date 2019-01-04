@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Pagination } from 'react-materialize'
-import PropTypes from 'prop-types'
 
 import Note from './Note'
 
@@ -10,8 +9,7 @@ class List extends React.Component {
 		super(props)
 		this.state = {
 			page: 1,
-			notesPerPage: 10,
-			filter: ''
+			notesPerPage: 10
 		}
 	}
 
@@ -21,12 +19,10 @@ class List extends React.Component {
 		}
 		return this.setState({  })
 	}
-	clearFilter = () => {
-		return () => {
-			const filter = this.props.filter
-			this.props.actionForFilter('')
-			console.log('filter should empty = ' + filter)
-		}
+
+	removeDuplicatesUsingSet = (array) => {
+		let unique_array = Array.from(new Set(array))
+		return unique_array
 	}
 
 	render() {
@@ -35,16 +31,19 @@ class List extends React.Component {
 		const start = (this.state.page-1)*this.state.notesPerPage
 		const end = start+this.state.notesPerPage
 
-		// const allNotes = this.props.noteInitialization
-		let notesToShow = this.props.notes.slice(start, end)
-		console.log('Filter error ' + filter)
+		const allNotes = this.props.notes
+		let notesToShow = []
 		if (filter && (filter !== undefined || null || '')) {
 			try {
-				notesToShow = this.props.notes.filter(note => note.otsikko.toLowerCase().includes(filter.toLowerCase())).slice(0,10)
+				const filterByTitle = allNotes.filter(note => note.title.toLowerCase().includes(filter.toLowerCase()))
+				const filterByTag = allNotes.filter(note => note.tags.join(' ').toLowerCase().includes(filter.toLowerCase()))
+				notesToShow = this.removeDuplicatesUsingSet(filterByTitle.concat(filterByTag))
 			} catch (e) {
-				// Happens everytime after there is filter when deleting note
+				//NOT SURE IF THIS IS EVEN NEEDED ANYMORE; BUG FIXED
 				console.log(e)
 			}
+		} else {
+			notesToShow = allNotes.slice(start, end)
 		}
 		return (
 			<div className="container">
@@ -73,8 +72,8 @@ const mapStateToProps = (store) => {
 	}
 }
 
-const ConnectedNoteList = connect(
-	mapStateToProps
+const ConnectedList = connect(
+	mapStateToProps 
 )(List)
 
-export default ConnectedNoteList
+export default ConnectedList
