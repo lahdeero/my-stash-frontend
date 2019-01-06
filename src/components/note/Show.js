@@ -3,9 +3,9 @@ import { connect } from 'react-redux'
 import { Button } from 'react-materialize'
 import { Redirect, Link } from 'react-router-dom'
 
-import noteService from '../../services/Note.js'
-import { removeNote } from '../../reducers/note'
-import { notify, errormessage } from '../../reducers/notification'
+import noteService from '../../services/NoteService.js'
+import { removeNote } from '../../reducers/noteReducer'
+import { notify, errormessage } from '../../reducers/notificationReducer'
 
 class Show extends React.Component {
 	constructor(props){
@@ -65,10 +65,10 @@ class Show extends React.Component {
 				<h2>{this.state.title}</h2>
 				<p>[{tags}]</p>
 				<div>
-					{text.split('\n').map(function(item, key) {
+					{text.split('\n').map(function(row, key) {
 					  return (
 					    <span key={key}>
-					      {item}
+					      {row}
 					      <br/>
 					    </span>
 					  )

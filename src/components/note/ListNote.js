@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Note = ({ note, Link, key }) => {
+const ListNote = ({ note, Link, key }) => {
 	if (note === undefined || note.id === undefined) return ( <div></div> )
 	let tags = note.tags
 	if (tags === undefined) tags = ['EI TAGIA', 'HUOM']
@@ -12,10 +12,10 @@ const Note = ({ note, Link, key }) => {
 		<div className={css}>
 			<h2><Link to={`/notes/${note.id}`}>{note.title}</Link> | {tags.join(', ')} |</h2> 
 			<div>
-				{text.split('\n').map(function(item, key) {
+				{text.split('\n').map(function(row, key) {
 				  return (
 				    <span key={key}>
-				      {item}
+				      {row}
 				      <br/>
 				    </span>
 				  )
@@ -24,4 +24,4 @@ const Note = ({ note, Link, key }) => {
 		</div>
 	)
 }
-export default Note
+export default ListNote

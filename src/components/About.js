@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import SystemService from '../services/system'
+import SystemService from '../services/SystemService'
 
 class About extends Component {
   constructor(props) {

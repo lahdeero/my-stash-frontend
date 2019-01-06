@@ -4,9 +4,9 @@ import { Button } from 'react-materialize'
 import { Redirect } from 'react-router-dom'
 import { Input } from 'react-materialize'
 
-import { modifyNote } from '../../reducers/note'
-import noteService from '../../services/Note.js'
-import { notify, errormessage } from '../../reducers/notification'
+import { modifyNote } from '../../reducers/noteReducer'
+import noteService from '../../services/NoteService.js'
+import { notify, errormessage } from '../../reducers/notificationReducer'
 
 class Edit extends React.Component {
 	constructor(props){
@@ -111,41 +111,41 @@ class Edit extends React.Component {
 
 		return(
     	<div>
-				<div>
-					<h3>Note tags&nbsp;</h3>
-						<Button>[?]</Button>
-				</div>
-				<div>
-					{this.state.tags.map(tag =>
-							<Button key={tag} onClick={() => { this.removeTag(tag) }}> {tag} </Button>
-					)}
-				</div>
-				<div>
-					<form id="tagform" onSubmit={this.addTag}>
-						<div>
-								<br />
-								<input name='tagText' value={this.state.tagText} onChange={this.handleChange}/>
-						</div>
+			<div>
+				<h3>Note tags&nbsp;</h3>
+				<Button>[?]</Button>
+			</div>
+			<div>
+				{this.state.tags.map(tag =>
+					<Button key={tag} onClick={() => { this.removeTag(tag) }}> {tag} </Button>
+				)}
+			</div>
+			<div>
+				<form id="tagform" onSubmit={this.addTag}>
+					<div>
 						<br />
-						<Button type="submit" form="tagform">Add tag</Button> 
-					</form>
-				</div>
-			 	<h2>Edit note</h2>
-       	<form onSubmit={this.handleSubmit}>
-       		<div>
-           	Title<br />
-           	<input name='title' value={this.state.title} onChange={this.handleChange} />
-         	</div>
-         	<div>
-          	<label>
-	 				 		Content<br />
-							<Input type='textarea' value={this.state.content} onChange={this.handleContent} rows='20' cols='60'/>
-       			</label>
-         	</div>
-	 				<br/>
-         	<Button type="submit">Edit Note</Button>
-       </form>
-     </div>  
+						<input name='tagText' value={this.state.tagText} onChange={this.handleChange}/>
+					</div>
+					<br />
+					<Button type="submit" form="tagform">Add tag</Button> 
+				</form>
+			</div>
+			<h2>Edit note</h2>
+       		<form onSubmit={this.handleSubmit}>
+       			<div>
+           		Title<br />
+           		<input name='title' value={this.state.title} onChange={this.handleChange} />
+         		</div>
+         		<div>
+          			<label>
+	 					Content<br />
+						<Input type='textarea' value={this.state.content} onChange={this.handleContent} rows='20' cols='60'/>
+      	 			</label>
+         		</div>
+	 			<br/>
+         		<Button type="submit">Edit Note</Button>
+       		</form>
+     	</div>  
    )
  }
 }

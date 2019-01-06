@@ -5,14 +5,17 @@ import PropTypes from 'prop-types'
 
 import './App.css'
 import Menu from './components/Menu'
+import Login from './components/Login'
 import List from './components/note/List'
 import Show from './components/note/Show'
 import Edit from './components/note/Edit'
 import Form from './components/note/Form'
 import About from './components/About'
 import Notification from './components/Notification'
-import {noteInitialization} from './reducers/note'
-import { actionForFilter } from './reducers/filter'
+import {noteInitialization} from './reducers/noteReducer'
+import { actionForFilter } from './reducers/filterReducer'
+import noteService from './services/NoteService'
+import { setLogin } from './reducers/userReducer'
 
 class App extends Component {
 	static propTypes = {
@@ -27,21 +30,25 @@ class App extends Component {
 		}
 	}
 
-  componentDidMount() {
-		if (!this.state.isMounted) {
-			this.props.noteInitialization()
-			this.setState({ 
-				isMounted: true 
-			})
-			document.title = 'my-stash'
+	componentDidMount() {
+		const loggedUserJSON = window.localStorage.getItem('loggedMystashappUser')
+		if (loggedUserJSON && !this.props.user) {
+			const user = JSON.parse(loggedUserJSON)
+			this.props.setLogin(user)
+			noteService.setToken(user.token)
+			this.props.noteInitialization(user)
 		}
-  }
-
+		this.setState({ 
+			isMounted: true 
+		})
+		document.title = 'my-stash'
+	}
 	componentWillUnmount() {
 		this.setState({
 			isMounted: false
 		})
 	}
+
 	handleChange = (event) => {
     	event.preventDefault()
     	const filter = event.target.value
@@ -62,13 +69,17 @@ class App extends Component {
 	}
 
   render() {
-   return (
+	if (!this.props.user) {
+		return <Login />
+	}
+	return (
       <div>
 		<Notification />
         <Router>
         <div>
 			<Menu currentPage={this.state.navigation} handleSelect={this.handleSelect} handleChange={this.handleChange} />
             <Route exact path="/" render={() => <List Link={Link} Route={Route}/>} />
+				<Route path="/login" render={() => <Login />} />
 				<Route path="/create" render={() => <Form />} />
 				<Route path="/about" render={() => <About />} />
 				<Route exact path="/notes/:id" component={Show} />
@@ -80,16 +91,17 @@ class App extends Component {
   }
 }
 
-
 const mapStateToProps = (store) => {
 	return {
 		notes: store.notes,
-		filter: store.filter
+		filter: store.filter,
+		user: store.user
 	}
 }
 const mapDispatchToProps = {
 	noteInitialization,
-	actionForFilter
+	actionForFilter,
+	setLogin
 }
 export default connect(
 	mapStateToProps,

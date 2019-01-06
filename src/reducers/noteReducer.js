@@ -1,4 +1,4 @@
-import noteService from '../services/Note.js'
+import noteService from '../services/NoteService.js'
 
 const noteReducer = (store = [], action) => {
 	switch(action.type) {
@@ -23,9 +23,9 @@ const noteReducer = (store = [], action) => {
 	}
 }
 
-export const noteInitialization = () => {
+export const noteInitialization = (user) => {
 	return async (dispatch) => {
-		const notes = await noteService.getAll()
+		const notes = await noteService.getAll(user)
 		dispatch({
 			type: 'INIT_NOTES',
 			data: notes

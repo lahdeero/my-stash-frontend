@@ -3,8 +3,8 @@ import { connect } from 'react-redux'
 import { Input,Button } from 'react-materialize'
 import { Redirect } from 'react-router-dom'
 
-import { createNote } from '../../reducers/note'
-import { notify, errormessage } from '../../reducers/notification'
+import { createNote } from '../../reducers/noteReducer'
+import { notify, errormessage } from '../../reducers/notificationReducer'
 
 class Form extends React.Component {
 	constructor(props) {

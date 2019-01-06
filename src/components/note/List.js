@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Pagination } from 'react-materialize'
 
-import Note from './Note'
+import ListNote from './ListNote'
 
 class List extends React.Component {
 	constructor(props) {
@@ -25,6 +25,13 @@ class List extends React.Component {
 		return unique_array
 	}
 
+	shortenLongContents = (array) => {
+		array.forEach(function(note) {
+			note.content = note.content.length <= 100 ? note.content : note.content.substring(0,100) + '...'
+		})
+		return array
+	}
+
 	render() {
 		let key = 1
 		const filter = this.props.filter
@@ -45,6 +52,8 @@ class List extends React.Component {
 		} else {
 			notesToShow = allNotes.slice(start, end)
 		}
+		notesToShow = this.shortenLongContents(notesToShow)
+
 		return (
 			<div className="container">
 					<div className="center">
@@ -52,9 +61,10 @@ class List extends React.Component {
 					</div>
 					<ul>
 						{notesToShow.map(note => <li key={key++}>
-						<div>
-							<Note note={note} Link={this.props.Link} Key={key} />
-							</div></li>
+							<div>
+								<ListNote note={note} Link={this.props.Link} Key={key} />
+							</div>
+						</li>
 						)}
 					</ul>
 					<div className="center">

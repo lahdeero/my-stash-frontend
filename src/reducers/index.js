@@ -1,9 +1,11 @@
 import { combineReducers } from 'redux'
-import notes from './note'
-import filter from './filter'
-import notification from './notification'
+import user from './userReducer'
+import notes from './noteReducer'
+import filter from './filterReducer'
+import notification from './notificationReducer'
 
 export default combineReducers({
+    user,
     notes,
     filter,
     notification
