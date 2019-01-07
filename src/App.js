@@ -12,15 +12,17 @@ import Edit from './components/note/Edit'
 import Form from './components/note/Form'
 import About from './components/About'
 import Notification from './components/Notification'
-import {noteInitialization} from './reducers/noteReducer'
+import { noteInitialization, clearNotes } from './reducers/noteReducer'
 import { actionForFilter } from './reducers/filterReducer'
-import noteService from './services/NoteService'
-import { setLogin } from './reducers/userReducer'
+import { setLogin,actionForLogout } from './reducers/userReducer'
 
 class App extends Component {
 	static propTypes = {
     	actionForFilter: PropTypes.func.isRequired,
-		noteInitialization: PropTypes.func.isRequired
+		noteInitialization: PropTypes.func.isRequired,
+		clearNotes: PropTypes.func.isRequired,
+		setLogin: PropTypes.func.isRequired,
+		actionForLogout: PropTypes.func.isRequired
 	}
 	constructor() {
 		super()
@@ -32,10 +34,9 @@ class App extends Component {
 
 	componentDidMount() {
 		const loggedUserJSON = window.localStorage.getItem('loggedMystashappUser')
-		if (loggedUserJSON && !this.props.user) {
+		if (loggedUserJSON && (!this.props.user || this.props.user.token) ) {
 			const user = JSON.parse(loggedUserJSON)
 			this.props.setLogin(user)
-			noteService.setToken(user.token)
 			this.props.noteInitialization(user)
 		}
 		this.setState({ 
@@ -53,6 +54,13 @@ class App extends Component {
     	event.preventDefault()
     	const filter = event.target.value
     	this.props.actionForFilter(filter)
+	}
+	handleLogout = async (event) => {
+		await event.preventDefault()
+		await window.localStorage.removeItem('loggedMystashappUser')
+    	await this.props.actionForFilter('')
+		await this.props.clearNotes()
+		await this.props.actionForLogout()
 	}
 
 	handleSelect = (selectedKey) => () => {
@@ -77,7 +85,7 @@ class App extends Component {
 		<Notification />
         <Router>
         <div>
-			<Menu currentPage={this.state.navigation} handleSelect={this.handleSelect} handleChange={this.handleChange} />
+			<Menu currentPage={this.state.navigation} handleSelect={this.handleSelect} handleChange={this.handleChange} handleLogout={this.handleLogout} />
             <Route exact path="/" render={() => <List Link={Link} Route={Route}/>} />
 				<Route path="/login" render={() => <Login />} />
 				<Route path="/create" render={() => <Form />} />
@@ -101,7 +109,9 @@ const mapStateToProps = (store) => {
 const mapDispatchToProps = {
 	noteInitialization,
 	actionForFilter,
-	setLogin
+	setLogin,
+	actionForLogout,
+	clearNotes
 }
 export default connect(
 	mapStateToProps,

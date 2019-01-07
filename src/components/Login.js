@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { loginAction } from '../reducers/userReducer'
+import { actionForLogin } from '../reducers/userReducer'
+import {noteInitialization} from '../reducers/noteReducer'
 
 class Login extends Component {
 	constructor() {
@@ -15,12 +16,11 @@ class Login extends Component {
 	handleLogin = async (event) => {
 		event.preventDefault()
 		try {
-			const user = await this.props.loginAction({
+			const user = await this.props.actionForLogin({
 				username: this.state.username,
 				password: this.state.password
 			})
-			await window.localStorage.setItem('loggedMystashappUser', JSON.stringify(user))
-			// await this.setState({ username: '', password: '', user })
+			await this.props.noteInitialization(user)
 		} catch(exception) {
 			this.setState({
 				error: 'Bad credentials'
@@ -67,7 +67,8 @@ class Login extends Component {
 }
 
 const mapDispatchToProps = {
-	loginAction
+	actionForLogin,
+	noteInitialization
 }
 
 const ConnectedLogin = connect(

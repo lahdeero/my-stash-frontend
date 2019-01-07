@@ -18,6 +18,8 @@ const noteReducer = (store = [], action) => {
 			return store.filter(note => note.id !== action.data)
 		case 'INIT_NOTES':
 			return action.data
+		case 'CLEAR':
+			return store = []
 		default:
 			return store
 	}
@@ -25,10 +27,20 @@ const noteReducer = (store = [], action) => {
 
 export const noteInitialization = (user) => {
 	return async (dispatch) => {
+		await noteService.setToken(user.token)
 		const notes = await noteService.getAll(user)
 		dispatch({
 			type: 'INIT_NOTES',
 			data: notes
+		})
+	}
+}
+
+export const clearNotes = () => {
+	return async (dispatch) => {
+		dispatch({
+			type: 'CLEAR',
+			data: null
 		})
 	}
 }

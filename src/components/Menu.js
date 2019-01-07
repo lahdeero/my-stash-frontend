@@ -4,7 +4,6 @@ import { Navbar,NavItem,Icon } from 'react-materialize'
 import { IndexLinkContainer } from 'react-router-bootstrap'
 import { Redirect } from 'react-router-dom'
 
-import {logoutAction} from '../reducers/userReducer'
 import Filter from './Filter'
 
 class Menu extends React.Component { 
@@ -15,15 +14,6 @@ class Menu extends React.Component {
 			handleSelect: props.handleSelect,
 			redirect: false
 		}
-	}
-
-	logout = async (event) => {
-		await event.preventDefault()
-		await window.localStorage.removeItem('loggedMystashappUser')
-		await this.props.logoutAction()
-		// await this.setState({
-		// 	redirect: true
-		// })
 	}
 
 	render() {
@@ -41,7 +31,7 @@ class Menu extends React.Component {
 					<NavItem eventkey={3}><Icon>settings</Icon></NavItem> 
 				</IndexLinkContainer>
 				<IndexLinkContainer to='/logout'>
-					<NavItem onClick={this.logout}><Icon>logout</Icon></NavItem> 
+					<NavItem onClick={this.props.handleLogout}><Icon>logout</Icon></NavItem> 
 				</IndexLinkContainer>
 			</Navbar>
 			<Filter handleChange={this.props.handleChange} />
@@ -50,16 +40,4 @@ class Menu extends React.Component {
 	}
 } 
 
-const mapStateToProps = (store) => {
-	return {
-		user: store.user
-	}
-}
-const mapDispatchToProps = {
-	logoutAction
-}
-
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(Menu)
+export default Menu
