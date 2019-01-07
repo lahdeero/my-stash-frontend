@@ -1,5 +1,4 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import { Navbar,NavItem,Icon } from 'react-materialize'
 import { IndexLinkContainer } from 'react-router-bootstrap'
 import { Redirect } from 'react-router-dom'
